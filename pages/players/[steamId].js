@@ -1,25 +1,26 @@
 // Components
 import LayoutWrapper from "@components/Layout";
+import PlayerDetails from "@components/Player/PlayerProfile";
 
 // API Calls
 import { fetchStratz } from "@lib/api";
 
-function PlayerProfile({ playerData }) {
-  const { steamAccount } = playerData;
+function PlayerProfile({ playerData, playerMatches }) {
+  const { steamAccount, winCount, matchCount } = playerData;
   return (
     <LayoutWrapper>
-      <p>Player Profile: {steamAccount.name}</p>
+      <PlayerDetails playerData={playerData} />
     </LayoutWrapper>
   );
 }
 
 export async function getServerSideProps(context) {
   const steamId = context.params.steamId;
-  const res = await fetchStratz("Player/", steamId);
+  const resPlayerData = await fetchStratz(`Player/${steamId}`);
 
   return {
     props: {
-      playerData: res.data,
+      playerData: resPlayerData.data,
     }, // will be passed to the page component as props
   };
 }
