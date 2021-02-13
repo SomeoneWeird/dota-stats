@@ -1,6 +1,7 @@
-// Components
+// Layout
 import LayoutWrapper from "@components/Layout";
 import PlayerDetails from "@components/Player/PlayerProfile";
+import RecentMatches from "@components/Player/RecentMatches";
 
 // API Calls
 import { fetchStratz } from "@lib/api";
@@ -10,6 +11,8 @@ function PlayerProfile({ playerData, playerMatches }) {
   return (
     <LayoutWrapper>
       <PlayerDetails playerData={playerData} />
+      <hr className="border-black border-2 border-opacity-20"/>
+      <RecentMatches steamId={steamAccount.steamId}/>
     </LayoutWrapper>
   );
 }
