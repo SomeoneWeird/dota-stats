@@ -8,22 +8,60 @@ import Loading from "@components/Loading";
 // Lib
 import { fetchStratz } from "@lib/api";
 
+// Constants
+import heroJson from "@constants/heroes.json";
+
+const HERO_IMAGE_PATH = "https://steamcdn-a.akamaihd.net";
+
 const MatchRowHero = ({ heroId }) => {
+  const heroData = heroJson[heroId];
+
   return (
     <div className="h-full px-2">
       <img
         className="h-full rounded"
-        src="https://cdn.stratz.com/images/dota2/heroes/nyx_assassin_horz.png"
+        src={`${HERO_IMAGE_PATH}${heroData.img}`}
       />
     </div>
   );
 };
 
+const MatchRowWinLoss = ({ isVictory }) => {
+  return (
+    <div className="h-full px-2 flex items-center">
+      {isVictory ? (
+        <span className="bg-green-500 rounded py-1 block w-8 text-center font-bold">
+          W
+        </span>
+      ) : (
+        <span className="bg-red-500 rounded py-1 block w-8 text-center font-bold">
+          L
+        </span>
+      )}
+    </div>
+  );
+};
+
+const MatchRowStats = ({ player }) => {
+  return (
+    <div className="h-full px-2 flex items-center">
+      <span className="px-1 font-bold">{player.numKills}</span>
+      <span className="px-1 font-bold">/</span>
+      <span className="px-1 font-bold">{player.numDeaths}</span>
+      <span className="px-1 font-bold">/</span>
+      <span className="px-1 font-bold">{player.numAssists}</span>
+    </div>
+  );
+};
+
 const MatchRow = ({ match }) => {
+  const player = match.players[0];
   return (
     <Link href={`/matches/${match.id}`}>
-      <a className="rounded flex-grow h-14 mb-2 flex items-center py-2 bg-black bg-opacity-20">
-        <MatchRowHero />
+      <a className="rounded flex-grow h-14 mb-2 flex items-center py-2 bg-black bg-opacity-20 hover:bg-opacity-50">
+        <MatchRowHero heroId={player.heroId} />
+        <MatchRowWinLoss isVictory={player.isVictory} />
+        <MatchRowStats player={player} />
       </a>
     </Link>
   );
