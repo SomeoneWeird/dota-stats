@@ -11,8 +11,13 @@ function PlayerProfile({ playerData, playerMatches }) {
   return (
     <LayoutWrapper>
       <PlayerDetails playerData={playerData} />
-      <hr className="border-black border-2 border-opacity-20"/>
-      <RecentMatches steamId={steamAccount.steamId}/>
+      <hr className="border-black border-2 border-opacity-20" />
+      <div className="flex">
+        <div className="flex-grow-2">
+          <RecentMatches steamId={steamAccount.steamId} />
+        </div>
+        <div className="flex-grow-1"></div>
+      </div>
     </LayoutWrapper>
   );
 }

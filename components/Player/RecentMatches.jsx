@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { uid } from "react-uid";
+import { formatDistanceToNow } from "date-fns";
 
 // Components
 import Loading from "@components/Loading";
@@ -44,12 +45,54 @@ const MatchRowWinLoss = ({ isVictory }) => {
 
 const MatchRowStats = ({ player }) => {
   return (
-    <div className="h-full px-2 flex items-center">
+    <div className="h-full px-2 flex items-center justify-center w-28">
       <span className="px-1 font-bold">{player.numKills}</span>
       <span className="px-1 font-bold">/</span>
       <span className="px-1 font-bold">{player.numDeaths}</span>
       <span className="px-1 font-bold">/</span>
       <span className="px-1 font-bold">{player.numAssists}</span>
+    </div>
+  );
+};
+
+const MatchRowTime = ({ match }) => {
+  const { durationSeconds, endDateTime } = match;
+  const durationFormatted = new Date(durationSeconds * 1000)
+    .toISOString()
+    .substr(14, 5);
+  const timeAgo = formatDistanceToNow(new Date(endDateTime * 1000), {
+    addSuffix: true,
+  });
+  return (
+    <div className="h-full px-2 flex flex-col items-end">
+      <span className="px-1 font-bold">{durationFormatted}</span>
+      <span className="text-xs">{timeAgo.replace("about", "").trim()}</span>
+    </div>
+  );
+};
+
+const MatchRowImpact = ({ impact }) => {
+  return (
+    <div className="h-full px-2 flex items-center w-40">
+      <span className="px-1 font-bold mr-1 text-right" style={{width: '4ch'}}>
+        {impact > 0 ? `+${impact}` : impact}
+      </span>
+      <div className="w-24">
+        <div className="h-2 relative bg-gray-300 bg-opacity-25 w-full rounded">
+          {impact > 0 ? (
+            <div
+              style={{ width: `${impact}%` }}
+              className="absolute left-1/2 translate-x-px bg-green-500 rounded-r h-full"
+            ></div>
+          ) : (
+            <div
+              style={{ width: `${Math.abs(impact)}%` }}
+              className="absolute right-1/2 translate-x-px bg-red-500 rounded-l h-full"
+            ></div>
+          )}
+          <div className="w-2px absolute left-1/2 translate-x-px bg-white h-full"></div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -62,6 +105,8 @@ const MatchRow = ({ match }) => {
         <MatchRowHero heroId={player.heroId} />
         <MatchRowWinLoss isVictory={player.isVictory} />
         <MatchRowStats player={player} />
+        <MatchRowImpact impact={player.imp} />
+        <MatchRowTime match={match} />
       </a>
     </Link>
   );
