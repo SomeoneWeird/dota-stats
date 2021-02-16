@@ -2,18 +2,21 @@ import { GetServerSideProps } from "next";
 import { useQuery, gql } from "@apollo/client";
 
 const PLAYER_DETAILS = gql`
-  {
-    player(steamAccountId: 207736551) {
+  query PlayerHeader($steamId: Long!) {
+    player(steamAccountId: $steamId) {
       steamAccountId
-      behaviorScore
-      matchCount
-      winCount
+      isFollowed
+      steamAccount {
+        avatar
+      }
     }
   }
 `;
 
 function PlayerProfile({ playerData, playerMatches }) {
-  const { loading, error, data } = useQuery(PLAYER_DETAILS);
+  const { loading, error, data } = useQuery(PLAYER_DETAILS, {
+    variables: { steamId: 207736551 },
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{console.log(error)}Error :(</p>;
