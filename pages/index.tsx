@@ -1,7 +1,8 @@
-import Head from "next/head";
-import Link from "next/link";
+import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import Link from 'next/link';
 
-export default function Home() {
+const Index: React.FC<AppProps> = () => {
   return (
     <div>
       <Head>
@@ -11,9 +12,15 @@ export default function Home() {
 
       <main>
         <ul>
-          <li><Link href="/players/207736551"><a>Player</a></Link></li>
+          <li>
+            <Link href="/players/207736551">
+              <a>Player</a>
+            </Link>
+          </li>
         </ul>
       </main>
     </div>
   );
-}
+};
+
+export default Index;
