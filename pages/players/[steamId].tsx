@@ -1,35 +1,50 @@
 import { gql, useQuery } from '@apollo/client';
 import { GetServerSideProps } from 'next';
-import type { AppProps } from 'next/app';
 
-const PLAYER_DETAILS = gql`
-  query PlayerHeader($steamId: Long!) {
-    player(steamAccountId: $steamId) {
-      steamAccountId
-      isFollowed
-      steamAccount {
-        avatar
-      }
-    }
-  }
-`;
+import client from '../../apolloConfig';
 
-const PlayerProfile: React.FC<AppProps> = ({ Component, pageProps }) => {
-  const { loading, error, data } = useQuery(PLAYER_DETAILS, {
-    variables: { steamId: 207736551 }
-  });
+interface PlayerProps {
+  player: {
+    steamId: number;
+    steamAccount: {
+      avatar: string;
+      name: string;
+      seasonRank: number;
+    };
+  };
+}
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{console.log(error)}Error :(</p>;
-
-  return <>{console.log(data)}</>;
+const PlayerProfile: React.FC<PlayerProps> = ({ player }) => {
+  const { steamAccount, steamId } = player;
+  console.log(player);
+  return (
+    <>
+      <h1>{steamAccount.name}</h1>
+    </>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const steamId = context.params.steamId;
 
+  const { data } = await client.query({
+    query: gql`
+      query PlayerHeader($steamId: Long!) {
+        player(steamAccountId: $steamId) {
+          steamAccountId
+          steamAccount {
+            avatar
+            name
+            seasonRank
+          }
+        }
+      }
+    `,
+    variables: { steamId: steamId }
+  });
+
   return {
-    props: {} // will be passed to the page component as props
+    props: { player: data.player } // will be passed to the page component as props
   };
 };
 
