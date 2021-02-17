@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client';
 import Wrapper from '@components/Layout/Wrapper';
 import { GetServerSideProps } from 'next';
+import styled from 'styled-components';
+import tw from 'tailwind-styled-components';
 
 import client from '../../apolloConfig';
 
@@ -15,12 +17,16 @@ interface PlayerProps {
   };
 }
 
+const StyleDiv = tw.div`
+  bg-indigo-500
+`;
+
 const PlayerProfile: React.FC<PlayerProps> = ({ player }) => {
   const { steamAccount, steamId } = player;
   const avatarPath: string = process.env.NEXT_PUBLIC_AVATAR_PATH + steamAccount.avatar;
 
   return (
-    <div className="bg-indigo-500">
+    <StyleDiv>
       <Wrapper>
         <div className="flex flex-col items-center">
           <div className="mb-4">
@@ -35,7 +41,7 @@ const PlayerProfile: React.FC<PlayerProps> = ({ player }) => {
           </div>
         </div>
       </Wrapper>
-    </div>
+    </StyleDiv>
   );
 };
 
