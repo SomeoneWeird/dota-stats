@@ -5,12 +5,6 @@
 
 @layer base {
   body {
-    @apply bg-gray-900 text-gray-200;
-  }
-  h1 {
-    @apply text-2xl;
-  }
-  h2 {
-    @apply text-xl;
+    @apply bg-gray-100 text-gray-800;
   }
 }
