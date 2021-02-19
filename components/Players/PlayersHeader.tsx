@@ -1,29 +1,67 @@
-import { Guild, SteamAccount } from '../../types';
+import {
+  Avatar,
+  Container,
+  Flex,
+  Heading,
+  Spacer,
+  Stat,
+  StatArrow,
+  StatGroup,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+  Text
+} from '@chakra-ui/react';
+import Wrapper from '@components/Layout/Wrapper';
+
+import { Player_player } from '../../types/Player';
 
 interface PlayersHeaderProps {
-  steamAccount: SteamAccount;
-  steamId: number;
-  guild: Guild;
+  steamId: string;
+  player: Player_player;
 }
 
-const PlayersHeader: React.FC<PlayersHeaderProps> = ({ steamAccount, steamId, guild }) => {
+const calculateWinPercentage = (winCount: number, matchCount: number) => {
+  return ((winCount / matchCount) * 100).toFixed(0);
+};
+
+const PlayerStats = ({ winCount, matchCount }) => {
+  return (
+    <Flex>
+      <Stat>
+        <StatLabel>Matches</StatLabel>
+        <StatNumber>{matchCount}</StatNumber>
+      </Stat>
+      <Stat>
+        <StatLabel>Win rate</StatLabel>
+        <StatNumber>{calculateWinPercentage(winCount, matchCount)}%</StatNumber>
+      </Stat>
+    </Flex>
+  );
+};
+
+const PlayersHeader: React.FC<PlayersHeaderProps> = ({ steamId, player }) => {
+  const { steamAccount, winCount, matchCount } = player;
   const avatarPath: string = process.env.NEXT_PUBLIC_AVATAR_PATH + steamAccount.avatar;
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-4">
-        <img
-          className="h-auto w-32 rounded"
-          src={avatarPath}
-          alt={`${steamAccount.name}'s avatar`}
-        />
-      </div>
-      <div className="something">
-        <h1 className="">
-          {steamAccount.name} <span>[{guild.tag}]</span>
-        </h1>
-      </div>
-    </div>
+    <Wrapper>
+      <Flex>
+        <Avatar src={avatarPath} name={`${steamAccount.name}'s avatar`} size="xl" mr="2" />
+        <Flex direction="column" w="full">
+          <Container>
+            <Heading as="h2" size="xl">
+              {steamAccount.name}
+            </Heading>
+            <Text></Text>
+          </Container>
+          <Spacer />
+          <Container>
+            <PlayerStats winCount={winCount} matchCount={matchCount} />
+          </Container>
+        </Flex>
+      </Flex>
+    </Wrapper>
   );
 };
 

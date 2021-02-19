@@ -4,35 +4,17 @@ import { PlayersHeader } from '@components/Players';
 import { GetServerSideProps } from 'next';
 
 import client from '../../apolloConfig';
+import { Player_player } from '../../types/Player';
 
 interface PlayerProps {
-  player: {
-    steamAccountId: number;
-    guildMember: {
-      guild: {
-        name: string;
-        id: number;
-        tag: string;
-      };
-    };
-    steamAccount: {
-      avatar: string;
-      name: string;
-      seasonRank: number;
-    };
-  };
+  steamId: string;
+  player: Player_player;
 }
 
-const PlayerProfile: React.FC<PlayerProps> = ({ player }) => {
-  const { steamAccount, steamAccountId, guildMember } = player;
-
+const PlayerProfile: React.FC<PlayerProps> = ({ steamId, player }) => {
   return (
     <Wrapper>
-      <PlayersHeader
-        steamAccount={steamAccount}
-        steamId={steamAccountId}
-        guild={guildMember.guild}
-      />
+      <PlayersHeader player={player} steamId={steamId} />
     </Wrapper>
   );
 };
@@ -43,20 +25,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const { data } = await client.query({
     query: gql`
-      query PlayerHeader($steamId: Long!) {
+      query Player($steamId: Long!) {
         player(steamAccountId: $steamId) {
-          steamAccountId
-          guildMember {
-            guild {
-              name
-              id
-              tag
-            }
-          }
+          winCount
+          matchCount
           steamAccount {
             avatar
             name
-            seasonRank
           }
         }
       }
@@ -65,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   return {
-    props: { player: data.player, path } // will be passed to the page component as props
+    props: { steamId, player: data.player, path } // will be passed to the page component as props
   };
 };
 
