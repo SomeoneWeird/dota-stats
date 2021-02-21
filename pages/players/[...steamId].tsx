@@ -27,11 +27,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     query: gql`
       query Player($steamId: Long!) {
         player(steamAccountId: $steamId) {
-          winCount
-          matchCount
           steamAccount {
             avatar
             name
+            profileUri
           }
         }
       }

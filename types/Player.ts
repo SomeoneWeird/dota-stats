@@ -11,6 +11,7 @@ export interface Player_player_steamAccount {
   __typename: "SteamAccountType";
   avatar: string | null;
   name: string | null;
+  profileUri: string;
 }
 
 export interface Player_player {
